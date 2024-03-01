@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+</head>
+<body>
+
+    <pre id="dictionary"></pre>
+    <button id="send">Send</button>
+    
+    <script>
+        // Establishing WebSocket connection
+        const socket = new WebSocket("ws://localhost:3002");
+
+        // Event listener for when the connection is established
+        socket.onopen = function(event) {
+            console.log("WebSocket connection established.");
+            
+            // Sending a message to the server
+            socket.send("Hello, server!");
+        };
+
+        // Event listener for when a message is received from the server
+        socket.onmessage = function(event) {
+            console.log("Message received from server:", event.data);
+
+            // Parse the received JSON string to JavaScript object
+            const dictionary = JSON.parse(event.data);
+
+            // Update the UI with the received dictionary
+            document.getElementById("dictionary").innerText = JSON.stringify(dictionary, null, 2);
+        };
+
+        // Function to handle button click event
+        document.getElementById("send").addEventListener("click", function() {
+            const message = "Hello from client!";
+            console.log("Sending message to server:", message);
+            // Sending a message to the server
+            socket.send(message);
+        });
+
+    </script>
+</body>
+</html>
